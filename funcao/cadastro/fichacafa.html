@@ -66,19 +66,9 @@
             <tr>
               <th>Líder de Família</th>
               <th>CPF do Líder</th>
-              <th>Telefone de Contato</th>
-              <th>Data de Nascimento do Líder</th>
-              <th>Título de Eleitor do Líder</th>
-              <th>Zona do Líder</th>
-              <th>Seção do Líder</th>
               <th>Nome do(a) Cônjuge</th>
               <th>CPF do(a) Cônjuge</th>
-              <th>Título de Eleitor do(a) Cônjuge</th>
-              <th>Zona do(a) Cônjuge</th>
-              <th>Seção do(a) Cônjuge</th>
-              <th>Filhos</th>
-              <th>Localidade</th>
-              <th>Motivo do Auxílio</th>
+              <th>Comunidade</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -144,6 +134,15 @@
       </div>
     </div>
 
+    <!-- Modal para Visualização -->
+    <div id="viewModal" class="modal">
+      <div class="modal-content">
+        <h2>Detalhes da Ficha</h2>
+        <div id="viewContent"></div>
+        <button type="button" class="cancelar" onclick="fecharViewModal()">Fechar</button>
+      </div>
+    </div>
+
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyC5wHhdIZlY9txtYkN88R-67lIP5FZlFpY",
@@ -160,8 +159,33 @@
       let loading = false;
       const LOCAL_STORAGE_KEY = 'fichasCache';
       const LAST_UPDATE_KEY = 'lastUpdateTimestamp';
-      const COOLDOWN_MINUTES = 240;
-      const COOLDOWN_MS = COOLDOWN_MINUTES * 60 * 1000; // 240 minutos em milissegundos
+      const COOLDOWN_MINUTES = 0;
+      const COOLDOWN_MS = COOLDOWN_MINUTES * 60 * 1000;
+      const LAST_ACTION_KEY = 'lastActionState';
+
+      function salvarEstadoAcao() {
+        const estado = {
+          buscaInput: document.getElementById('buscaInput').value,
+          motivoFiltro: document.getElementById('motivoAuxilioSelect').value,
+          comunidadeFiltro: document.getElementById('comunidadeSelect').value,
+          tabelaVisivel: document.getElementById('fichasContainer').style.display === 'block'
+        };
+        localStorage.setItem(LAST_ACTION_KEY, JSON.stringify(estado));
+      }
+
+      function restaurarEstadoAcao() {
+        const estado = localStorage.getItem(LAST_ACTION_KEY);
+        if (estado) {
+          const { buscaInput, motivoFiltro, comunidadeFiltro, tabelaVisivel } = JSON.parse(estado);
+          document.getElementById('buscaInput').value = buscaInput || '';
+          document.getElementById('motivoAuxilioSelect').value = motivoFiltro || 'todos';
+          document.getElementById('comunidadeSelect').value = comunidadeFiltro || 'todas';
+          if (tabelaVisivel) {
+            document.getElementById('fichasContainer').style.display = 'block';
+            filtrarTabela();
+          }
+        }
+      }
 
       function atualizarEstadoBotao() {
         const atualizarButton = document.getElementById('atualizarButton');
@@ -203,6 +227,7 @@
           verificarDuplicados();
           popularComunidades();
           atualizarEstadoBotao();
+          restaurarEstadoAcao();
           alert("Dados atualizados com sucesso!");
         } catch (error) {
           console.error("Erro ao atualizar dados:", error);
@@ -229,6 +254,7 @@
               verificarDuplicados();
               popularComunidades();
               atualizarEstadoBotao();
+              restaurarEstadoAcao();
             } catch (parseError) {
               console.error("Erro ao parsear dados do localStorage:", parseError);
               localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -252,6 +278,7 @@
           verificarDuplicados();
           popularComunidades();
           atualizarEstadoBotao();
+          restaurarEstadoAcao();
         } catch (error) {
           console.error("Erro ao carregar fichas:", error);
           alert("Erro ao carregar fichas: " + error.message);
@@ -269,20 +296,11 @@
           tr.innerHTML = `
             <td>${f.liderFamilia || '-'}</td>
             <td>${f.cpfLider || '-'}</td>
-            <td>${f.numeroContato || '-'}</td>
-            <td>${formatarDataBR(f.dataNascimentoLider || '')}</td>
-            <td>${f.tituloEleitorLider || '-'}</td>
-            <td>${f.zonaLider || '-'}</td>
-            <td>${f.secaoLider || '-'}</td>
             <td>${f.nomeEsposa || '-'}</td>
             <td>${f.cpfEsposa || '-'}</td>
-            <td>${f.tituloEleitorEsposa || '-'}</td>
-            <td>${f.zonaEsposa || '-'}</td>
-            <td>${f.secaoEsposa || '-'}</td>
-            <td>${f.filhos || '-'}</td>
             <td>${f.localidade || '-'}</td>
-            <td>${Array.isArray(f.motivoAuxilio) ? f.motivoAuxilio.join(', ') : f.motivoAuxilio || '-'}</td>
             <td>
+              <button class="visualizar" onclick="abrirModalVisualizar('${f.id}')">Visualizar</button>
               <button class="editar" onclick="abrirModalEditar('${f.id}')">Editar</button>
               <button class="excluir" onclick="excluirFicha('${f.id}')">Excluir</button>
             </td>
@@ -342,6 +360,7 @@
       function toggleDuplicados() {
         const container = document.getElementById('duplicadosContainer');
         container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        salvarEstadoAcao();
       }
 
       async function excluirFicha(id) {
@@ -386,6 +405,7 @@
           const matchesComunidade = comunidadeFiltro === 'todas' || ficha.localidade === comunidadeFiltro;
           row.style.display = matchesTexto && matchesMotivo && matchesComunidade ? '' : 'none';
         });
+        salvarEstadoAcao();
       }
 
       function filtrarPorMotivoEComunidade() {
@@ -406,6 +426,7 @@
           row.style.display = 'none';
         });
         document.getElementById('buscaInput').blur();
+        salvarEstadoAcao();
       }
 
       async function importarBackup(event) {
@@ -481,9 +502,38 @@
         document.getElementById('editModal').style.display = 'flex';
       }
 
+      function abrirModalVisualizar(id) {
+        const ficha = fichasCache.find(f => f.id === id);
+        if (!ficha) return alert("Ficha não encontrada.");
+
+        const viewContent = document.getElementById('viewContent');
+        viewContent.innerHTML = `
+          <p><strong>Líder de Família:</strong> ${ficha.liderFamilia || '-'}</p>
+          <p><strong>CPF do Líder:</strong> ${ficha.cpfLider || '-'}</p>
+          <p><strong>Telefone de Contato:</strong> ${ficha.numeroContato || '-'}</p>
+          <p><strong>Data de Nascimento do Líder:</strong> ${formatarDataBR(ficha.dataNascimentoLider || '')}</p>
+          <p><strong>Título de Eleitor do Líder:</strong> ${ficha.tituloEleitorLider || '-'}</p>
+          <p><strong>Zona do Líder:</strong> ${ficha.zonaLider || '-'}</p>
+          <p><strong>Seção do Líder:</strong> ${ficha.secaoLider || '-'}</p>
+          <p><strong>Nome do(a) Cônjuge:</strong> ${ficha.nomeEsposa || '-'}</p>
+          <p><strong>CPF do(a) Cônjuge:</strong> ${ficha.cpfEsposa || '-'}</p>
+          <p><strong>Título de Eleitor do(a) Cônjuge:</strong> ${ficha.tituloEleitorEsposa || '-'}</p>
+          <p><strong>Zona do(a) Cônjuge:</strong> ${ficha.zonaEsposa || '-'}</p>
+          <p><strong>Seção do(a) Cônjuge:</strong> ${ficha.secaoEsposa || '-'}</p>
+          <p><strong>Filhos:</strong> ${ficha.filhos || '-'}</p>
+          <p><strong>Localidade:</strong> ${ficha.localidade || '-'}</p>
+          <p><strong>Motivo do Auxílio:</strong> ${Array.isArray(ficha.motivoAuxilio) ? ficha.motivoAuxilio.join(', ') : ficha.motivoAuxilio || '-'}</p>
+        `;
+        document.getElementById('viewModal').style.display = 'flex';
+      }
+
       function fecharModal() {
         document.getElementById('editModal').style.display = 'none';
         document.getElementById('editForm').reset();
+      }
+
+      function fecharViewModal() {
+        document.getElementById('viewModal').style.display = 'none';
       }
 
       async function salvarEdicao(event) {
@@ -534,10 +584,7 @@
         const comunidadeSelecionada = document.getElementById('comunidadeSelect').value;
 
         const headers = [
-          'Líder', 'CPF Líder', 'Contato', 'Nascimento',
-          'Título', 'Zona', 'Seção', 'Cônjuge',
-          'CPF Cônjuge', 'Título Cônj.', 'Zona Cônj.',
-          'Seção Cônj.', 'Filhos', 'Localidade', 'Motivo Auxílio'
+          'Líder', 'CPF Líder', 'Cônjuge', 'CPF Cônjuge', 'Comunidade'
         ];
 
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -549,10 +596,7 @@
           .filter(f => motivoFiltro === "todos" || (Array.isArray(f.motivoAuxilio) ? f.motivoAuxilio.includes(motivoFiltro) : f.motivoAuxilio === motivoFiltro))
           .filter(f => comunidadeSelecionada === "todas" || f.localidade === comunidadeSelecionada)
           .map(f => [
-            f.liderFamilia || '-', f.cpfLider || '-', f.numeroContato || '-', formatarDataBR(f.dataNascimentoLider || ''),
-            f.tituloEleitorLider || '-', f.zonaLider || '-', f.secaoLider || '-', f.nomeEsposa || '-',
-            f.cpfEsposa || '-', f.tituloEleitorEsposa || '-', f.zonaEsposa || '-', f.secaoEsposa || '-',
-            f.filhos || '-', f.localidade || '-', Array.isArray(f.motivoAuxilio) ? f.motivoAuxilio.join(', ') : f.motivoAuxilio || '-'
+            f.liderFamilia || '-', f.cpfLider || '-', f.nomeEsposa || '-', f.cpfEsposa || '-', f.localidade || '-'
           ]);
 
         const titulo = `Cadastros - ${comunidadeSelecionada === 'todas' ? 'Todas as Comunidades' : comunidadeSelecionada} - ${motivoFiltro === 'todos' ? 'Todos os Motivos' : motivoFiltro}`;
@@ -565,7 +609,7 @@
           body: tableData,
           margin: { top: 25, left: margin, right: margin },
           styles: {
-            fontSize: 6,
+            fontSize: 8,
             cellPadding: 2,
             overflow: 'linebreak',
             lineHeight: 1.2,
