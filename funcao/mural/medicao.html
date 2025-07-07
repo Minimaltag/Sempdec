@@ -348,9 +348,23 @@
       return date.toISOString().split("T")[0];
     }
 
+    function getManausDate() {
+      const date = new Date();
+      return new Date(date.toLocaleString("en-US", { timeZone: "America/Manaus" }));
+    }
+
+    function formatDateToManaus(date) {
+      return date.toLocaleDateString("pt-BR", { timeZone: "America/Manaus" });
+    }
+
+    function getDaysInMonthManaus(year, month) {
+      const lastDay = new Date(Date.UTC(year, month + 1, 0));
+      return lastDay.getUTCDate();
+    }
+
     function updateTitles() {
-      const hoje = new Date();
-      const nomeMes = hoje.toLocaleDateString("pt-BR", { month: "long" }).toUpperCase();
+      const hoje = getManausDate();
+      const nomeMes = hoje.toLocaleDateString("pt-BR", { month: "long", timeZone: "America/Manaus" }).toUpperCase();
       document.getElementById("pageTitle").textContent = `Medição - ${nomeMes}`;
       document.getElementById("mainTitle").textContent = `Medição - ${nomeMes}`;
     }
@@ -363,21 +377,21 @@
       const mural = document.getElementById("muralMedicao");
       mural.innerHTML = "";
 
-      const hoje = new Date();
+      const hoje = getManausDate();
       const mes = hoje.getMonth();
       const ano = hoje.getFullYear();
       const diaHoje = hoje.getDate();
-      const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+      const diasNoMes = getDaysInMonthManaus(ano, mes);
 
-      const dataBase = new Date(dataInicial.getFullYear(), dataInicial.getMonth(), dataInicial.getDate());
+      const dataBase = new Date(Date.UTC(dataInicial.getUTCFullYear(), dataInicial.getUTCMonth(), dataInicial.getUTCDate()));
 
       const tabela = document.createElement("table");
       tabela.innerHTML = "<thead><tr><th>Dia</th><th>Semana</th><th>Responsável</th></tr><tbody></tbody>";
       const tbody = tabela.querySelector("tbody");
 
       for (let dia = 1; dia <= diasNoMes; dia++) {
-        const data = new Date(ano, mes, dia);
-        const diaSemana = data.toLocaleDateString("pt-BR", { weekday: "long" });
+        const data = new Date(Date.UTC(ano, mes, dia));
+        const diaSemana = data.toLocaleDateString("pt-BR", { weekday: "long", timeZone: "America/Manaus" });
         const linha = tbody.insertRow();
 
         if (dia < diaHoje) linha.classList.add("passado");
@@ -386,7 +400,7 @@
         linha.insertCell().textContent = dia;
         linha.insertCell().textContent = diaSemana;
 
-        const currentDate = new Date(ano, mes, dia);
+        const currentDate = new Date(Date.UTC(ano, mes, dia));
         let responsavel;
         if (currentDate < dataBase) {
           responsavel = "***";
@@ -437,7 +451,7 @@
       if (doc.exists) {
         const data = doc.data();
         if (Array.isArray(data.ordem)) cicloMedicao = data.ordem;
-        if (data.dataInicial) dataInicial = new Date(data.dataInicial);
+        if (data.dataInicial) dataInicial = new Date(data.dataInicial + "T00:00:00Z");
         if (data.repeticoesPorPessoa) repeticoesPorPessoa = data.repeticoesPorPessoa;
       }
       updateTitles();
@@ -452,7 +466,7 @@
     async function salvarDataInicial() {
       const input = document.getElementById("novaDataInicial").value;
       if (input) {
-        dataInicial = new Date(input);
+        dataInicial = new Date(input + "T00:00:00Z");
         document.getElementById("modalDataInicial").style.display = "none";
         await salvarNoFirebase();
         gerarTabelaMedicao();
@@ -466,4 +480,4 @@
     carregarDoFirebase();
   </script>
 </body>
-</html>
+      </html>
