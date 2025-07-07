@@ -584,7 +584,10 @@
         const comunidadeSelecionada = document.getElementById('comunidadeSelect').value;
 
         const headers = [
-          'Líder', 'CPF Líder', 'Cônjuge', 'CPF Cônjuge', 'Comunidade'
+          'Líder', 'CPF Líder', 'Contato', 'Nascimento',
+          'Título', 'Zona', 'Seção', 'Cônjuge',
+          'CPF Cônjuge', 'Título Cônj.', 'Zona Cônj.',
+          'Seção Cônj.', 'Filhos', 'Localidade', 'Motivo Auxílio'
         ];
 
         const pageWidth = doc.internal.pageSize.getWidth();
@@ -596,7 +599,10 @@
           .filter(f => motivoFiltro === "todos" || (Array.isArray(f.motivoAuxilio) ? f.motivoAuxilio.includes(motivoFiltro) : f.motivoAuxilio === motivoFiltro))
           .filter(f => comunidadeSelecionada === "todas" || f.localidade === comunidadeSelecionada)
           .map(f => [
-            f.liderFamilia || '-', f.cpfLider || '-', f.nomeEsposa || '-', f.cpfEsposa || '-', f.localidade || '-'
+            f.liderFamilia || '-', f.cpfLider || '-', f.numeroContato || '-', formatarDataBR(f.dataNascimentoLider || ''),
+            f.tituloEleitorLider || '-', f.zonaLider || '-', f.secaoLider || '-', f.nomeEsposa || '-',
+            f.cpfEsposa || '-', f.tituloEleitorEsposa || '-', f.zonaEsposa || '-', f.secaoEsposa || '-',
+            f.filhos || '-', f.localidade || '-', Array.isArray(f.motivoAuxilio) ? f.motivoAuxilio.join(', ') : f.motivoAuxilio || '-'
           ]);
 
         const titulo = `Cadastros - ${comunidadeSelecionada === 'todas' ? 'Todas as Comunidades' : comunidadeSelecionada} - ${motivoFiltro === 'todos' ? 'Todos os Motivos' : motivoFiltro}`;
@@ -609,7 +615,7 @@
           body: tableData,
           margin: { top: 25, left: margin, right: margin },
           styles: {
-            fontSize: 8,
+            fontSize: 6,
             cellPadding: 2,
             overflow: 'linebreak',
             lineHeight: 1.2,
@@ -745,4 +751,4 @@
     </script>
   </main>
 </body>
-</html>
+  </html>
