@@ -6,7 +6,6 @@
   <title>Mtag</title>    
   <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
   <style>
-    /* Reset e Layout Geral */
     * {
       margin: 0;
       padding: 0;
@@ -24,7 +23,6 @@
       padding: 20px;
     }
 
-    /* Container de Login */
     .login-container {
       background: #ffffff;
       padding: 40px 30px;
@@ -35,7 +33,6 @@
       text-align: center;
     }
 
-    /* Logo com animação */
     .logo {
       max-width: 150px;
       height: auto;
@@ -56,7 +53,6 @@
       }
     }
 
-    /* Título e Textos */
     h2 {
       color: #ff6a00;
       margin-bottom: 25px;
@@ -73,7 +69,6 @@
       font-size: 0.9rem;
     }
 
-    /* Campos de Entrada */
     input {
       width: 100%;
       padding: 12px 14px;
@@ -90,7 +85,6 @@
       outline: none;
     }
 
-    /* Botão */
     button {
       width: 100%;
       background: #ff6a00;
@@ -102,6 +96,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-bottom: 10px;
     }
 
     button:hover:not(:disabled) {
@@ -114,7 +109,6 @@
       cursor: not-allowed;
     }
 
-    /* Mensagem de Erro */
     .mensagem {
       margin-bottom: 20px;
       padding: 12px;
@@ -134,7 +128,6 @@
       opacity: 1;
     }
 
-    /* Spinner de Carregamento */
     .spinner {
       display: inline-block;
       width: 18px;
@@ -152,7 +145,15 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Responsividade */
+    .register-link {
+      font-size: 0.9rem;
+      color: #007bff;
+      margin-top: 12px;
+      display: block;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
     @media (max-width: 400px) {
       .login-container {
         padding: 30px 20px;
@@ -173,6 +174,7 @@
       }
     }
   </style>
+
   <script type="module">
     import { auth } from './js/firebase-config.js';
     import {
@@ -230,6 +232,10 @@
         botao.innerHTML = originalText;
       }
     };
+
+    window.irParaCadastro = function () {
+      window.location.href = "cadastro.html";
+    };
   </script>
 </head>
 <body>
@@ -244,6 +250,7 @@
       <input type="password" id="senha" name="senha" placeholder="Digite sua senha" aria-label="Senha" required />
       <button type="submit">Entrar</button>
     </form>
+    <span class="register-link" onclick="irParaCadastro()">Cadastrar-se</span>
   </div>
 </body>
 </html>
