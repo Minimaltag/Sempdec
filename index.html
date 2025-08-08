@@ -69,10 +69,14 @@
       font-size: 0.9rem;
     }
 
+    .input-container {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
     input {
       width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 20px;
+      padding: 12px 40px 12px 14px;
       border: 2px solid #007bff;
       border-radius: 8px;
       font-size: 1rem;
@@ -83,6 +87,16 @@
       border-color: #ff6a00;
       box-shadow: 0 0 8px rgba(255, 106, 0, 0.3);
       outline: none;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #007bff;
+      font-size: 1.2rem;
     }
 
     button {
@@ -187,6 +201,18 @@
       msg.classList.add("show");
     }
 
+    window.togglePassword = function () {
+      const passwordInput = document.getElementById('senha');
+      const toggleIcon = document.getElementById('toggle-password');
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.innerHTML = '🙈';
+      } else {
+        passwordInput.type = 'password';
+        toggleIcon.innerHTML = '👁️';
+      }
+    };
+
     window.login = async function () {
       const email = document.getElementById('email').value;
       const senha = document.getElementById('senha').value;
@@ -245,9 +271,14 @@
     <div id="mensagem" class="mensagem"></div>
     <form onsubmit="login(); return false;">
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Digite seu email" aria-label="Email" required />
+      <div class="input-container">
+        <input type="email" id="email" name="email" placeholder="Digite seu email" aria-label="Email" required />
+      </div>
       <label for="senha">Senha:</label>
-      <input type="password" id="senha" name="senha" placeholder="Digite sua senha" aria-label="Senha" required />
+      <div class="input-container">
+        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" aria-label="Senha" required />
+        <span id="toggle-password" class="toggle-password" onclick="togglePassword()">👁️</span>
+      </div>
       <button type="submit">Entrar</button>
     </form>
     <span class="register-link" onclick="irParaCadastro()">Cadastrar-se</span>

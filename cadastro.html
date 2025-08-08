@@ -29,14 +29,14 @@
       border-radius: 12px;
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
       width: 100%;
-      max-width: 360px;
+      max-width: 400px; /* Aumentado para melhor proporção */
       text-align: center;
     }
 
     .logo {
       max-width: 150px;
       height: auto;
-      margin-bottom: 30px;
+      margin: 0 auto 30px;
       animation: pulse 2s infinite ease-in-out;
       border-radius: 50%;
       box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.2);
@@ -55,24 +55,31 @@
 
     h2 {
       color: #007bff;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
       font-weight: 600;
       font-size: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 25px; /* Mais espaço entre grupos de formulário */
     }
 
     label {
       display: block;
       text-align: left;
-      margin-bottom: 8px;
+      margin-bottom: 12px; /* Aumentado para melhor espaçamento */
       font-weight: 600;
       color: #007bff;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+    }
+
+    .input-container {
+      position: relative;
     }
 
     input {
       width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 20px;
+      padding: 14px 40px 14px 16px; /* Ajustado para maior conforto */
       border: 2px solid #007bff;
       border-radius: 8px;
       font-size: 1rem;
@@ -83,6 +90,16 @@
       border-color: #0056b3;
       box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
       outline: none;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #007bff;
+      font-size: 1.2rem;
     }
 
     button {
@@ -96,6 +113,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 10px; /* Adicionado para espaçamento */
     }
 
     button:hover:not(:disabled) {
@@ -109,7 +127,7 @@
     }
 
     .mensagem {
-      margin-bottom: 20px;
+      margin: 15px 0;
       padding: 12px;
       border-radius: 6px;
       text-align: center;
@@ -132,8 +150,13 @@
       font-size: 0.85rem;
       cursor: pointer;
       display: block;
-      margin-top: 10px;
+      margin-top: 15px;
       text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+
+    .redefinir-link:hover {
+      color: #0056b3;
     }
 
     /* Modal */
@@ -156,17 +179,22 @@
 
     .modal-content {
       background-color: #fff;
-      padding: 25px 30px;
+      padding: 30px;
       border-radius: 10px;
       width: 100%;
-      max-width: 360px;
+      max-width: 400px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       text-align: center;
     }
 
     .modal-content h3 {
       color: #007bff;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .modal-content .form-group {
+      margin-bottom: 20px;
     }
 
     .close-modal {
@@ -176,6 +204,11 @@
       font-size: 1rem;
       margin-top: 15px;
       cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close-modal:hover {
+      color: #0056b3;
     }
 
     @media (max-width: 400px) {
@@ -195,6 +228,10 @@
       button {
         font-size: 1rem;
         padding: 12px 0;
+      }
+
+      label {
+        font-size: 0.9rem;
       }
     }
   </style>
@@ -294,6 +331,18 @@
         mensagem.classList.add("show");
       }
     };
+
+    window.togglePassword = function () {
+      const senhaInput = document.getElementById("senha");
+      const toggleIcon = document.getElementById("toggle-password");
+      if (senhaInput.type === "password") {
+        senhaInput.type = "text";
+        toggleIcon.textContent = "🙈";
+      } else {
+        senhaInput.type = "password";
+        toggleIcon.textContent = "👁️";
+      }
+    };
   </script>
 </head>
 <body>
@@ -302,12 +351,17 @@
     <h2>Cadastro</h2>
     <div id="mensagem" class="mensagem"></div>
     <form onsubmit="cadastrar(); return false;">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Digite seu email" required />
-
-      <label for="senha">Senha:</label>
-      <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required />
-
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Digite seu email" required />
+      </div>
+      <div class="form-group">
+        <label for="senha">Senha:</label>
+        <div class="input-container">
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required />
+          <span id="toggle-password" class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
       <button type="submit">Cadastrar</button>
     </form>
     <span class="redefinir-link" onclick="abrirModal()">Esqueceu a senha?</span>
@@ -317,9 +371,11 @@
   <div class="modal" id="modal">
     <div class="modal-content">
       <h3>Redefinir Senha</h3>
-      <input type="email" id="email-redefinicao" placeholder="Seu email" />
+      <div class="form-group">
+        <input type="email" id="email-redefinicao" placeholder="Seu email" />
+      </div>
       <button onclick="redefinirSenha()">Enviar Email</button>
-      <div id="mensagem-redefinicao" class="mensagem" style="margin-top: 10px;"></div>
+      <div id="mensagem-redefinicao" class="mensagem"></div>
       <button class="close-modal" onclick="fecharModal()">Fechar</button>
     </div>
   </div>
