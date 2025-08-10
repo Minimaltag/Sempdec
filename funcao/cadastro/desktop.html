@@ -415,26 +415,32 @@
       return resto === parseInt(cpf.charAt(10));
     }
 
+    async function verificarCPFDuplicado(cpf, inputId) {
+      const snapshotLider = await db.collection('fichas_acaoexecutada').where('cpfLider', '==', cpf).get();
+      const snapshotEsposa = await db.collection('fichas_acaoexecutada').where('cpfEsposa', '==', cpf).get();
+      return !snapshotLider.empty || !snapshotEsposa.empty;
+    }
+
     async function validarCPFRealTime(input) {
       const cpf = input.value;
       const feedbackElement = document.getElementById(input.id + 'Feedback');
+      feedbackElement.textContent = '';
+      feedbackElement.className = 'cpf-feedback';
+
       if (cpf.length === 14) {
         if (!validarCPF(cpf)) {
           feedbackElement.textContent = 'CPF inválido';
           feedbackElement.className = 'cpf-feedback cpf-invalido';
-          return;
-        }
-        const snapshot = await db.collection('fichas_acaoexecutada').where('cpfLider', '==', cpf).get();
-        if (!snapshot.empty) {
-          feedbackElement.textContent = 'CPF já cadastrado';
-          feedbackElement.className = 'cpf-feedback cpf-duplicado';
         } else {
-          feedbackElement.textContent = 'CPF válido';
-          feedbackElement.className = 'cpf-feedback cpf-valido';
+          const isDuplicado = await verificarCPFDuplicado(cpf, input.id);
+          if (isDuplicado) {
+            feedbackElement.textContent = 'CPF já cadastrado';
+            feedbackElement.className = 'cpf-feedback cpf-duplicado';
+          } else {
+            feedbackElement.textContent = 'CPF válido';
+            feedbackElement.className = 'cpf-feedback cpf-valido';
+          }
         }
-      } else {
-        feedbackElement.textContent = '';
-        feedbackElement.className = 'cpf-feedback';
       }
     }
 
