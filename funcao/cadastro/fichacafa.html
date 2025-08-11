@@ -929,12 +929,12 @@ function validateSecao(secao, statusId) {
     // 📌 Título centralizado
     doc.setFontSize(12);
     doc.setFont("helvetica", "bold");
-    doc.text('RECIBO DE ENTREGA DE RANCHO', doc.internal.pageSize.getWidth() / 2, yOffset + 8, { align: 'center' });
+    doc.text('TERMO DE RECEBIMENTO', doc.internal.pageSize.getWidth() / 2, yOffset + 8, { align: 'center' });
     yOffset += imageHeight + 8;
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
-    const declarationText = `Eu, ${familia.liderFamilia || '____________________'}, inscrito(a) no CPF sob o nº ${familia.cpfLider || '____________________'}, residente na localidade de ${familia.localidade || '____________________'}, declaro, para os devidos fins, que recebi da Secretaria Municipal de Proteção e Defesa Civil (SEMPDEC), na data de ${dataAtual}, a quantidade de _____ rancho(s) de alimentos.`;
+    const declarationText = `Eu, ${familia.liderFamilia || '____________________'}, inscrito(a) no CPF sob o nº ${familia.cpfLider || '____________________'}, residente na localidade de ${familia.localidade || '____________________'}, declaro, para os devidos fins, que recebi da Secretaria Municipal de Proteção e Defesa Civil (SEMPDEC), na data de ${dataAtual}, a quantidade de _____ cestas básicas.`;
     const splitDeclaration = doc.splitTextToSize(declarationText, maxWidth);
     doc.text(splitDeclaration, margin, yOffset);
     yOffset += splitDeclaration.length * 5 + 5;
@@ -949,7 +949,7 @@ function validateSecao(secao, statusId) {
       `Cônjuge: ${familia.nomeEsposa || '____________________'} — CPF: ${familia.cpfEsposa || '____________________'}`,
       `Contato: ${familia.numeroContato || '____________________'}`,
       `Motivo do Auxílio: ${Array.isArray(familia.motivoAuxilio) ? familia.motivoAuxilio.join(', ') : familia.motivoAuxilio || '____________________'}`,
-      `Recebido por (se diferente do titular): ______________________________`
+      `Recebido por (se diferente do titular): ________________________________________`
     ];
     additionalInfo.forEach(line => {
       const splitLine = doc.splitTextToSize(line, maxWidth);
@@ -971,9 +971,9 @@ function validateSecao(secao, statusId) {
     doc.setFontSize(10);
     doc.text(`Data de Emissão: ${dataAtual}`, margin, yOffset);
     yOffset += 5;
-    doc.text('Funcionário Responsável pela Entrega: ______________________________', margin, yOffset);
+    doc.text('Funcionário Responsável pela Entrega: ________________________________________', margin, yOffset);
     yOffset += 5;
-    doc.text('Assinatura do Beneficiário ou Representante: ______________________________', margin, yOffset);
+    doc.text('Assinatura do Beneficiário ou Representante: ________________________________________', margin, yOffset);
     yOffset += 10;
 
     if (receiptCount === 0 && index < familias.length - 1) {
