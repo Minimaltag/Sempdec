@@ -606,7 +606,10 @@
 
     // Funções Medição
     function formatDateInput(date) {
-      return date.toISOString().split("T")[0];
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(date.getUTCDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
 
     function getManausDate() {
@@ -615,8 +618,7 @@
     }
 
     function getDaysInMonthManaus(year, month) {
-      const lastDay = new Date(Date.UTC(year, month + 1, 0));
-      return lastDay.getUTCDate();
+      return new Date(year, month + 1, 0).getDate();
     }
 
     function updateTitlesMedicao() {
@@ -635,14 +637,14 @@
       const diaHoje = hoje.getDate();
       const diasNoMes = getDaysInMonthManaus(ano, mes);
 
-      const dataBase = new Date(Date.UTC(dataInicialMedicao.getUTCFullYear(), dataInicialMedicao.getUTCMonth(), dataInicialMedicao.getUTCDate()));
+      const dataBase = new Date(dataInicialMedicao.getUTCFullYear(), dataInicialMedicao.getUTCMonth(), dataInicialMedicao.getUTCDate());
 
       const tabela = document.createElement("table");
       tabela.innerHTML = "<thead><tr><th>Dia</th><th>Semana</th><th>Responsável</th></tr><tbody></tbody>";
       const tbody = tabela.querySelector("tbody");
 
       for (let dia = 1; dia <= diasNoMes; dia++) {
-        const data = new Date(Date.UTC(ano, mes, dia));
+        const data = new Date(ano, mes, dia);
         const diaSemana = data.toLocaleDateString("pt-BR", { weekday: "long", timeZone: "America/Manaus" });
         const linha = tbody.insertRow();
 
@@ -652,7 +654,7 @@
         linha.insertCell().textContent = dia;
         linha.insertCell().textContent = diaSemana;
 
-        const currentDate = new Date(Date.UTC(ano, mes, dia));
+        const currentDate = new Date(ano, mes, dia);
         let responsavel;
         if (currentDate < dataBase) {
           responsavel = "***";
@@ -701,7 +703,7 @@
     async function salvarDataInicialMedicao() {
       const input = document.getElementById("novaDataInicialMedicao").value;
       if (input) {
-        dataInicialMedicao = new Date(input + "T00:00:00Z");
+        dataInicialMedicao = new Date(input);
         document.getElementById("modalDataInicialMedicao").style.display = "none";
         await salvarNoFirebaseMedicao();
         gerarTabelaMedicao();
@@ -713,7 +715,7 @@
       if (doc.exists) {
         const data = doc.data();
         if (Array.isArray(data.ordem)) cicloMedicao = data.ordem;
-        if (data.dataInicial) dataInicialMedicao = new Date(data.dataInicial + "T00:00:00Z");
+        if (data.dataInicial) dataInicialMedicao = new Date(data.dataInicial);
         if (data.repeticoesPorPessoa) repeticoesPorPessoa = data.repeticoesPorPessoa;
       }
       updateTitlesMedicao();
