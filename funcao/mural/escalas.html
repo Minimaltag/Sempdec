@@ -22,16 +22,6 @@
       line-height: 1.5;
     }
 
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: #1a202c;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -78,8 +68,6 @@
       border-collapse: separate;
       border-spacing: 0;
       background: #ffffff;
-      border-radius: 12px;
-      overflow: hidden;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       font-size: 0.9rem;
     }
@@ -99,6 +87,16 @@
       text-transform: uppercase;
       font-size: 0.8rem;
       letter-spacing: 0.05em;
+    }
+
+    .table-title {
+      background: #ff892a;
+      color: #ffffff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 12px;
+      text-transform: uppercase;
     }
 
     tr:last-child td {
@@ -199,6 +197,7 @@
     }
 
     input[type="date"],
+    input[type="month"],
     input[type="number"],
     textarea {
       width: 100%;
@@ -229,15 +228,17 @@
       gap: 12px;
     }
 
+    .month-selector {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
     .hidden {
       display: none;
     }
 
     @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-
       table {
         font-size: 0.8rem;
       }
@@ -276,6 +277,7 @@
       .btn-admin,
       .modal,
       .modal-content,
+      .month-selector,
       .hidden {
         display: none;
       }
@@ -288,7 +290,6 @@
         width: 100%;
         font-size: 9pt;
         box-shadow: none;
-        border-radius: 0;
       }
 
       th, td {
@@ -301,6 +302,12 @@
         color: #000;
       }
 
+      .table-title {
+        background: #f1f1f1;
+        color: #000;
+        font-size: 10pt;
+      }
+
       .header {
         display: flex;
         justify-content: space-between;
@@ -311,11 +318,6 @@
       .header img {
         width: 80px;
         height: auto;
-      }
-
-      h1 {
-        font-size: 12pt;
-        margin: 0;
       }
 
       .footer {
@@ -342,14 +344,18 @@
 
     <!-- Seção Plantão -->
     <section id="plantaoSection">
-      <h1 id="tituloMes">Plantão</h1>
+      <div class="month-selector">
+        <input type="month" id="mesSelecionadoPlantao" onchange="atualizarTabelaPlantao()">
+      </div>
       <div class="mural" id="muralPlantao"></div>
       <button class="btn-admin" onclick="abrirModalAdmin('plantao')">Administrativo - Plantão</button>
     </section>
 
     <!-- Seção Medição -->
     <section id="medicaoSection" class="hidden">
-      <h1 id="mainTitle">Medição</h1>
+      <div class="month-selector">
+        <input type="month" id="mesSelecionadoMedicao" onchange="atualizarTabelaMedicao()">
+      </div>
       <div class="mural" id="muralMedicao"></div>
       <button class="btn-admin" onclick="abrirModalAdmin('medicao')">Administrativo - Medição</button>
     </section>
@@ -489,16 +495,6 @@
     }
 
     // Funções Plantão
-    function atualizarTituloMes() {
-      const hoje = new Date();
-      const mesesPorExtenso = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-      ];
-      const mesAtual = mesesPorExtenso[hoje.getMonth()];
-      document.getElementById("tituloMes").textContent = `Plantão - ${mesAtual}`;
-    }
-
     function gerarTabelaPlantao(mes = null, ano = null) {
       const mural = document.getElementById("muralPlantao");
       mural.innerHTML = "";
@@ -509,8 +505,20 @@
       const diaHoje = hoje.getDate();
       const diasNoMes = new Date(anoSelecionado, mesSelecionado + 1, 0).getDate();
 
+      const mesesPorExtenso = [
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      ];
+      const tituloTabela = `Plantão - ${mesesPorExtenso[mesSelecionado]} ${anoSelecionado}`;
+
       const tabela = document.createElement("table");
-      tabela.innerHTML = "<thead><tr><th>Dia</th><th>Semana</th><th>Equipe</th></tr></thead><tbody></tbody>";
+      tabela.innerHTML = `
+        <thead>
+          <tr><th colspan="3" class="table-title">${tituloTabela}</th></tr>
+          <tr><th>Dia</th><th>Semana</th><th>Equipe</th></tr>
+        </thead>
+        <tbody></tbody>
+      `;
       const tbody = tabela.querySelector("tbody");
 
       for (let dia = 1; dia <= diasNoMes; dia++) {
@@ -531,6 +539,14 @@
       }
 
       mural.appendChild(tabela);
+    }
+
+    function atualizarTabelaPlantao() {
+      const input = document.getElementById("mesSelecionadoPlantao").value;
+      if (input) {
+        const [ano, mes] = input.split('-').map(Number);
+        gerarTabelaPlantao(mes - 1, ano);
+      }
     }
 
     function abrirModalAdmin(tipo) {
@@ -600,7 +616,8 @@
           dataInicial: dataInicialPlantao.toISOString().split("T")[0]
         });
       }
-      atualizarTituloMes();
+      const hoje = new Date();
+      document.getElementById("mesSelecionadoPlantao").value = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
       gerarTabelaPlantao();
     }
 
@@ -621,40 +638,48 @@
       return new Date(year, month + 1, 0).getDate();
     }
 
-    function updateTitlesMedicao() {
-      const hoje = getManausDate();
-      const nomeMes = hoje.toLocaleDateString("pt-BR", { month: "long", timeZone: "America/Manaus" }).toUpperCase();
-      document.getElementById("mainTitle").textContent = `Medição - ${nomeMes}`;
-    }
-
-    function gerarTabelaMedicao() {
+    function gerarTabelaMedicao(mes = null, ano = null) {
       const mural = document.getElementById("muralMedicao");
       mural.innerHTML = "";
 
       const hoje = getManausDate();
-      const mes = hoje.getMonth();
-      const ano = hoje.getFullYear();
+      const mesSelecionado = mes !== null ? mes : hoje.getMonth();
+      const anoSelecionado = ano !== null ? ano : hoje.getFullYear();
       const diaHoje = hoje.getDate();
-      const diasNoMes = getDaysInMonthManaus(ano, mes);
+      const diasNoMes = getDaysInMonthManaus(anoSelecionado, mesSelecionado);
+
+      const mesesPorExtenso = [
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+      ];
+      const tituloTabela = `Medição - ${mesesPorExtenso[mesSelecionado]} ${anoSelecionado}`;
 
       const dataBase = new Date(dataInicialMedicao.getUTCFullYear(), dataInicialMedicao.getUTCMonth(), dataInicialMedicao.getUTCDate());
 
       const tabela = document.createElement("table");
-      tabela.innerHTML = "<thead><tr><th>Dia</th><th>Semana</th><th>Responsável</th></tr><tbody></tbody>";
+      tabela.innerHTML = `
+        <thead>
+          <tr><th colspan="3" class="table-title">${tituloTabela}</th></tr>
+          <tr><th>Dia</th><th>Semana</th><th>Responsável</th></tr>
+        </thead>
+        <tbody></tbody>
+      `;
       const tbody = tabela.querySelector("tbody");
 
       for (let dia = 1; dia <= diasNoMes; dia++) {
-        const data = new Date(ano, mes, dia);
+        const data = new Date(anoSelecionado, mesSelecionado, dia);
         const diaSemana = data.toLocaleDateString("pt-BR", { weekday: "long", timeZone: "America/Manaus" });
         const linha = tbody.insertRow();
 
-        if (dia < diaHoje) linha.classList.add("passado");
-        else if (dia === diaHoje) linha.classList.add("hoje");
+        if (anoSelecionado === hoje.getFullYear() && mesSelecionado === hoje.getMonth()) {
+          if (dia < diaHoje) linha.classList.add("passado");
+          else if (dia === diaHoje) linha.classList.add("hoje");
+        }
 
         linha.insertCell().textContent = dia;
         linha.insertCell().textContent = diaSemana;
 
-        const currentDate = new Date(ano, mes, dia);
+        const currentDate = new Date(anoSelecionado, mesSelecionado, dia);
         let responsavel;
         if (currentDate < dataBase) {
           responsavel = "***";
@@ -668,6 +693,14 @@
       }
 
       mural.appendChild(tabela);
+    }
+
+    function atualizarTabelaMedicao() {
+      const input = document.getElementById("mesSelecionadoMedicao").value;
+      if (input) {
+        const [ano, mes] = input.split('-').map(Number);
+        gerarTabelaMedicao(mes - 1, ano);
+      }
     }
 
     function abrirModalMedicao() {
@@ -718,7 +751,8 @@
         if (data.dataInicial) dataInicialMedicao = new Date(data.dataInicial);
         if (data.repeticoesPorPessoa) repeticoesPorPessoa = data.repeticoesPorPessoa;
       }
-      updateTitlesMedicao();
+      const hoje = getManausDate();
+      document.getElementById("mesSelecionadoMedicao").value = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
       gerarTabelaMedicao();
     }
 
