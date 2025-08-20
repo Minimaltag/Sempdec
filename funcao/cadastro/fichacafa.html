@@ -43,9 +43,6 @@
         <button onclick="gerarPDF()">Gerar PDF</button>
         <button onclick="gerarReciboPDF()">Gerar Recibo PDF</button>
         <button onclick="gerarCronogramaPDF()">Cronograma</button>
-        <input type="file" id="inputBackup" accept=".json" style="display: none;" />
-        <button onclick="document.getElementById('inputBackup').click()">Importar Backup JSON</button>
-        <button onclick="exportarBackup()">Exportar Backup JSON</button>
         <button onclick="toggleDuplicados()">Ver Duplicados</button>
         <button id="atualizarButton" class="atualizar" onclick="atualizarDados()">Atualizar</button>
       </div>
@@ -56,7 +53,7 @@
       </div>
 
       <div class="search-container">
-        <input type="text" id="buscaInput" placeholder="Buscar ficha (mínimo 4 caracteres)..." onkeyup="if(event.key === 'Enter') { buscarFicha(); }" />
+        <input type="text" id="buscaInput" class="uppercase" placeholder="Buscar ficha (mínimo 4 caracteres)..." oninput="aplicarMascaraBusca(this); if(this.value.length >= 5) buscarFicha();" onkeyup="if(event.key === 'Enter') buscarFicha();" />
         <button class="search-btn" onclick="buscarFicha()" title="Buscar"><i class="fas fa-search"></i></button>
         <button class="clear-search" onclick="limparBusca()" title="Limpar"><i class="fas fa-broom"></i></button>
       </div>
@@ -79,249 +76,258 @@
     </div>
 
     <!-- Modal para Edição -->
-     <div id="editModal" class="modal">      
-  <div class="modal-content">      
-    <h2>Editar Ficha</h2>      
-    <form id="editForm">      
-      <label for="editLiderFamilia">Líder de Família</label>      
-      <input type="text" id="editLiderFamilia" name="liderFamilia" class="uppercase" />  
+    <div id="editModal" class="modal">      
+      <div class="modal-content">      
+        <h2>Editar Ficha</h2>      
+        <form id="editForm">      
+          <label for="editLiderFamilia">Líder de Família</label>      
+          <input type="text" id="editLiderFamilia" name="liderFamilia" class="uppercase" />  
 
-      <label for="editCpfLider">CPF do Líder</label>      
-      <input type="text" id="editCpfLider" name="cpfLider" inputmode="numeric" maxlength="14" />      
-      <small id="cpfLiderStatus"></small>    
+          <label for="editCpfLider">CPF do Líder</label>      
+          <input type="text" id="editCpfLider" name="cpfLider" inputmode="numeric" maxlength="14" />      
+          <small id="cpfLiderStatus"></small>    
 
-      <label for="editNumeroContato">Telefone de Contato</label>  
-      <input type="text" id="editNumeroContato" name="numeroContato" inputmode="numeric" maxlength="15" />  
+          <label for="editNumeroContato">Telefone de Contato</label>  
+          <input type="text" id="editNumeroContato" name="numeroContato" inputmode="numeric" maxlength="15" />  
 
-      <label for="editDataNascimentoLider">Data de Nascimento do Líder</label>
-      <input type="text" id="editDataNascimentoLider" name="dataNascimentoLider" placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric" />
-      <small id="idadeLider" style="display:block; margin-top:4px; color:#555;"></small>
+          <label for="editDataNascimentoLider">Data de Nascimento do Líder</label>
+          <input type="text" id="editDataNascimentoLider" name="dataNascimentoLider" placeholder="DD/MM/AAAA" maxlength="10" inputmode="numeric" />
+          <small id="idadeLider" style="display:block; margin-top:4px; color:#555;"></small>
 
-      <label for="editTituloEleitorLider">Título de Eleitor do Líder</label>
-      <input type="text" id="editTituloEleitorLider" name="tituloEleitorLider" inputmode="numeric" maxlength="14" />
+          <label for="editTituloEleitorLider">Título de Eleitor do Líder</label>
+          <input type="text" id="editTituloEleitorLider" name="tituloEleitorLider" inputmode="numeric" maxlength="14" />
 
-      <label for="editZonaLider">Zona do Líder</label>
-      <input type="text" id="editZonaLider" name="zonaLider" inputmode="numeric" maxlength="4" />
+          <label for="editZonaLider">Zona do Líder</label>
+          <input type="text" id="editZonaLider" name="zonaLider" inputmode="numeric" maxlength="4" />
 
-      <label for="editSecaoLider">Seção do Líder</label>
-      <input type="text" id="editSecaoLider" name="secaoLider" inputmode="numeric" maxlength="3" />
-      <small id="secaoLiderStatus"></small>
+          <label for="editSecaoLider">Seção do Líder</label>
+          <input type="text" id="editSecaoLider" name="secaoLider" inputmode="numeric" maxlength="3" />
+          <small id="secaoLiderStatus"></small>
 
-      <label for="editNomeEsposa">Nome do(a) Cônjuge</label>
-      <input type="text" id="editNomeEsposa" name="nomeEsposa" class="uppercase" />
+          <label for="editNomeEsposa">Nome do(a) Cônjuge</label>
+          <input type="text" id="editNomeEsposa" name="nomeEsposa" class="uppercase" />
 
-      <label for="editCpfEsposa">CPF do(a) Cônjuge</label>
-      <input type="text" id="editCpfEsposa" name="cpfEsposa" inputmode="numeric" maxlength="14" />
-      <small id="cpfEsposaStatus"></small>
+          <label for="editCpfEsposa">CPF do(a) Cônjuge</label>
+          <input type="text" id="editCpfEsposa" name="cpfEsposa" inputmode="numeric" maxlength="14" />
+          <small id="cpfEsposaStatus"></small>
 
-      <label for="editTituloEleitorEsposa">Título de Eleitor do(a) Cônjuge</label>
-      <input type="text" id="editTituloEleitorEsposa" name="tituloEleitorEsposa" inputmode="numeric" maxlength="14" />
+          <label for="editTituloEleitorEsposa">Título de Eleitor do(a) Cônjuge</label>
+          <input type="text" id="editTituloEleitorEsposa" name="tituloEleitorEsposa" inputmode="numeric" maxlength="14" />
 
-      <label for="editZonaEsposa">Zona do(a) Cônjuge</label>
-      <input type="text" id="editZonaEsposa" name="zonaEsposa" inputmode="numeric" maxlength="4" />
+          <label for="editZonaEsposa">Zona do(a) Cônjuge</label>
+          <input type="text" id="editZonaEsposa" name="zonaEsposa" inputmode="numeric" maxlength="4" />
 
-      <label for="editSecaoEsposa">Seção do(a) Cônjuge</label>
-      <input type="text" id="editSecaoEsposa" name="secaoEsposa" inputmode="numeric" maxlength="3" />
-      <small id="secaoEsposaStatus"></small>
+          <label for="editSecaoEsposa">Seção do(a) Cônjuge</label>
+          <input type="text" id="editSecaoEsposa" name="secaoEsposa" inputmode="numeric" maxlength="3" />
+          <small id="secaoEsposaStatus"></small>
 
-      <label for="editFilhos">Filhos</label>
-      <input type="text" id="editFilhos" name="filhos" inputmode="numeric" maxlength="2" />
+          <label for="editFilhos">Filhos</label>
+          <input type="text" id="editFilhos" name="filhos" inputmode="numeric" maxlength="2" />
 
-      <label for="editLocalidade">Localidade</label>
-<input type="text" id="editLocalidade" name="localidade" />
+          <label for="editLocalidade">Localidade</label>
+          <input type="text" id="editLocalidade" name="localidade" />
 
-      <label for="editMotivoAuxilio">Motivo do Auxílio</label>
-<textarea id="editMotivoAuxilio" name="motivoAuxilio"></textarea>
+          <label for="editMotivoAuxilio">Motivo do Auxílio</label>
+          <textarea id="editMotivoAuxilio" name="motivoAuxilio"></textarea>
 
-      <input type="hidden" id="editId" name="id" />      
-      <button type="submit">Salvar</button>
-      <button type="button" class="cancelar" onclick="fecharModal()">Cancelar</button>
-    </form>
-  </div>      
-</div>  
+          <input type="hidden" id="editId" name="id" />      
+          <button type="submit">Salvar</button>
+          <button type="button" class="cancelar" onclick="fecharModal()">Cancelar</button>
+        </form>
+      </div>      
+    </div>  
 
-<script>      
-// Letras maiúsculas      
-document.querySelectorAll('.uppercase').forEach((input) => {      
-  input.addEventListener('input', () => {      
-    input.value = input.value.toUpperCase();      
-  });      
-});    
+    <script>      
+      // Letras maiúsculas      
+      document.querySelectorAll('.uppercase').forEach((input) => {      
+        input.addEventListener('input', () => {      
+          input.value = input.value.toUpperCase();      
+        });      
+      });    
 
-// Máscaras
-function maskCPF(value) {  
-  return value.replace(/\D/g, '')  
-    .replace(/(\d{3})(\d)/, '$1.$2')  
-    .replace(/(\d{3})(\d)/, '$1.$2')  
-    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');  
-}  
+      // Máscaras
+      function maskCPF(value) {  
+        return value.replace(/\D/g, '')  
+          .replace(/(\d{3})(\d)/, '$1.$2')  
+          .replace(/(\d{3})(\d)/, '$1.$2')  
+          .replace(/(\d{3})(\d{1,2})$/, '$1-$2');  
+      }  
 
-function maskPhone(value) {
-  return value.replace(/\D/g, '')
-    .replace(/^(\d{2})(\d)/g, '($1) $2')
-    .replace(/(\d{5})(\d)/, '$1-$2')
-    .slice(0, 15);
-}
+      function maskPhone(value) {
+        return value.replace(/\D/g, '')
+          .replace(/^(\d{2})(\d)/g, '($1) $2')
+          .replace(/(\d{5})(\d)/, '$1-$2')
+          .slice(0, 15);
+      }
 
-function maskDate(value) {
-  return value.replace(/\D/g, '')
-    .replace(/(\d{2})(\d)/, '$1/$2')
-    .replace(/(\d{2})(\d)/, '$1/$2')
-    .slice(0, 10);
-}
+      function maskDate(value) {
+        return value.replace(/\D/g, '')
+          .replace(/(\d{2})(\d)/, '$1/$2')
+          .replace(/(\d{2})(\d)/, '$1/$2')
+          .slice(0, 10);
+      }
 
-function maskTitulo(value) {
-  return value.replace(/\D/g, '')
-    .slice(0, 12)
-    .replace(/(\d{4})(\d)/, '$1 $2')
-    .replace(/(\d{4}) (\d{4})(\d)/, '$1 $2 $3');
-}
+      function maskTitulo(value) {
+        return value.replace(/\D/g, '')
+          .slice(0, 12)
+          .replace(/(\d{4})(\d)/, '$1 $2')
+          .replace(/(\d{4}) (\d{4})(\d)/, '$1 $2 $3');
+      }
 
-// Eventos de input com máscaras e validações
-document.getElementById('editCpfLider').addEventListener('input', (e) => {
-  e.target.value = maskCPF(e.target.value);
-  if (e.target.value.length === 14) {
-    validateCPF(e.target.value, 'cpfLiderStatus');
-  } else {
-    document.getElementById('cpfLiderStatus').textContent = '';
-  }
-});
+      function aplicarMascaraBusca(input) {
+        const value = input.value.replace(/\D/g, '');
+        if (value.length > 0 && !isNaN(value)) {
+          input.value = maskCPF(value);
+        } else {
+          input.value = input.value.toUpperCase();
+        }
+      }
 
-document.getElementById('editCpfEsposa').addEventListener('input', (e) => {
-  e.target.value = maskCPF(e.target.value);
-  if (e.target.value.length === 14) {
-    validateCPF(e.target.value, 'cpfEsposaStatus');
-  } else {
-    document.getElementById('cpfEsposaStatus').textContent = '';
-  }
-});
+      // Eventos de input com máscaras e validações
+      document.getElementById('editCpfLider').addEventListener('input', (e) => {
+        e.target.value = maskCPF(e.target.value);
+        if (e.target.value.length === 14) {
+          validateCPF(e.target.value, 'cpfLiderStatus');
+        } else {
+          document.getElementById('cpfLiderStatus').textContent = '';
+        }
+      });
 
-document.getElementById('editNumeroContato').addEventListener('input', (e) => {
-  e.target.value = maskPhone(e.target.value);
-});
+      document.getElementById('editCpfEsposa').addEventListener('input', (e) => {
+        e.target.value = maskCPF(e.target.value);
+        if (e.target.value.length === 14) {
+          validateCPF(e.target.value, 'cpfEsposaStatus');
+        } else {
+          document.getElementById('cpfEsposaStatus').textContent = '';
+        }
+      });
 
-document.getElementById('editDataNascimentoLider').addEventListener('input', (e) => {
-  e.target.value = maskDate(e.target.value);
-  if (e.target.value.length === 10) {
-    showAge(e.target.value, 'idadeLider');
-  } else {
-    document.getElementById('idadeLider').textContent = '';
-  }
-});
+      document.getElementById('editNumeroContato').addEventListener('input', (e) => {
+        e.target.value = maskPhone(e.target.value);
+      });
 
-document.getElementById('editTituloEleitorLider').addEventListener('input', (e) => {
-  e.target.value = maskTitulo(e.target.value);
-});
+      document.getElementById('editDataNascimentoLider').addEventListener('input', (e) => {
+        e.target.value = maskDate(e.target.value);
+        if (e.target.value.length === 10) {
+          showAge(e.target.value, 'idadeLider');
+        } else {
+          document.getElementById('idadeLider').textContent = '';
+        }
+      });
 
-document.getElementById('editTituloEleitorEsposa').addEventListener('input', (e) => {
-  e.target.value = maskTitulo(e.target.value);
-});
+      document.getElementById('editTituloEleitorLider').addEventListener('input', (e) => {
+        e.target.value = maskTitulo(e.target.value);
+      });
 
-document.getElementById('editSecaoLider').addEventListener('input', (e) => {
-  validateSecao(e.target.value, 'secaoLiderStatus');
-});
+      document.getElementById('editTituloEleitorEsposa').addEventListener('input', (e) => {
+        e.target.value = maskTitulo(e.target.value);
+      });
 
-document.getElementById('editSecaoEsposa').addEventListener('input', (e) => {
-  validateSecao(e.target.value, 'secaoEsposaStatus');
-});
+      document.getElementById('editSecaoLider').addEventListener('input', (e) => {
+        validateSecao(e.target.value, 'secaoLiderStatus');
+      });
 
-// Validação de CPF
-function validateCPF(cpf, statusElementId) {
-  const cleaned = cpf.replace(/\D/g, '');
-  const el = document.getElementById(statusElementId);
-  if (cleaned.length !== 11 || /^(\d)\1+$/.test(cleaned)) {
-    el.textContent = 'CPF inválido';
-    el.style.color = 'red';
-    return false;
-  }
+      document.getElementById('editSecaoEsposa').addEventListener('input', (e) => {
+        validateSecao(e.target.value, 'secaoEsposaStatus');
+      });
 
-  let sum = 0;
-  for (let i = 0; i < 9; i++) sum += parseInt(cleaned.charAt(i)) * (10 - i);
-  let firstCheck = 11 - (sum % 11);
-  if (firstCheck >= 10) firstCheck = 0;
-  if (firstCheck !== parseInt(cleaned.charAt(9))) {
-    el.textContent = 'CPF inválido';
-    el.style.color = 'red';
-    return false;
-  }
+      // Validação de CPF
+      function validateCPF(cpf, statusElementId) {
+        const cleaned = cpf.replace(/\D/g, '');
+        const el = document.getElementById(statusElementId);
+        if (cleaned.length !== 11 || /^(\d)\1+$/.test(cleaned)) {
+          el.textContent = 'CPF inválido';
+          el.style.color = 'red';
+          return false;
+        }
 
-  sum = 0;
-  for (let i = 0; i < 10; i++) sum += parseInt(cleaned.charAt(i)) * (11 - i);
-  let secondCheck = 11 - (sum % 11);
-  if (secondCheck >= 10) secondCheck = 0;
-  if (secondCheck !== parseInt(cleaned.charAt(10))) {
-    el.textContent = 'CPF inválido';
-    el.style.color = 'red';
-    return false;
-  }
+        let sum = 0;
+        for (let i = 0; i < 9; i++) sum += parseInt(cleaned.charAt(i)) * (10 - i);
+        let firstCheck = 11 - (sum % 11);
+        if (firstCheck >= 10) firstCheck = 0;
+        if (firstCheck !== parseInt(cleaned.charAt(9))) {
+          el.textContent = 'CPF inválido';
+          el.style.color = 'red';
+          return false;
+        }
 
-  el.textContent = 'CPF válido';
-  el.style.color = 'green';
-  return true;
-}
+        sum = 0;
+        for (let i = 0; i < 10; i++) sum += parseInt(cleaned.charAt(i)) * (11 - i);
+        let secondCheck = 11 - (sum % 11);
+        if (secondCheck >= 10) secondCheck = 0;
+        if (secondCheck !== parseInt(cleaned.charAt(10))) {
+          el.textContent = 'CPF inválido';
+          el.style.color = 'red';
+          return false;
+        }
 
-// Cálculo de idade
-function showAge(data, outputId) {
-  const span = document.getElementById(outputId);
-  const parts = data.split('/');
-  if (parts.length === 3) {
-    const [dia, mes, ano] = parts.map(Number);
-    const nascimento = new Date(ano, mes - 1, dia);
-    const hoje = new Date();
-    let idade = hoje.getFullYear() - nascimento.getFullYear();
-    const m = hoje.getMonth() - nascimento.getMonth();
-    if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
-    if (!isNaN(idade) && idade >= 0 && idade <= 130) {
-      span.textContent = `${idade} anos`;
-    } else {
-      span.textContent = '';
-    }
-  } else {
-    span.textContent = '';
-  }
-}
+        el.textContent = 'CPF válido';
+        el.style.color = 'green';
+        return true;
+      }
 
-// Validação de seção eleitoral (exibe mensagem apenas com 3 dígitos)
-const secoesValidas = new Set([
-  '001','002','003','004','005','006','007','008','009','010',
-  '011','012','021','022','023','029','030','031','047','048',
-  '049','050','063','064','065','073','075','078','080','081',
-  '082','083','085','091','094','095','096','097','098','099',
-  '100','101','102','103','104','105','106','107','108','109',
-  '110','111','112','113','115','116','117','118','119','120',
-  '121','122','123','124','125','126','127','128','129','130',
-  '131','132','133','134','135','136','137','138','139','140',
-  '141','142','143','188','189','190','192','193','194','195',
-  '197','199','200','201','202','203','205','208','209','210',
-  '211','212'
-]);
+      // Cálculo de idade
+      function showAge(data, outputId) {
+        const span = document.getElementById(outputId);
+        const parts = data.split('/');
+        if (parts.length === 3) {
+          const [dia, mes, ano] = parts.map(Number);
+          const nascimento = new Date(ano, mes - 1, dia);
+          const hoje = new Date();
+          let idade = hoje.getFullYear() - nascimento.getFullYear();
+          const m = hoje.getMonth() - nascimento.getMonth();
+          if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) idade--;
+          if (!isNaN(idade) && idade >= 0 && idade <= 130) {
+            span.textContent = `${idade} anos`;
+          } else {
+            span.textContent = '';
+          }
+        } else {
+          span.textContent = '';
+        }
+      }
 
-function validateSecao(secao, statusId) {
-  const cleaned = secao.replace(/\D/g, '');
-  const el = document.getElementById(statusId);
-  
-  if (cleaned.length === 3) {
-    if (secoesValidas.has(cleaned)) {
-      el.textContent = 'Seção válida';
-      el.style.color = 'green';
-    } else {
-      el.textContent = 'Seção inválida';
-      el.style.color = 'red';
-    }
-  } else {
-    el.textContent = '';
-  }
-}
-</script>
+      // Validação de seção eleitoral
+      const secoesValidas = new Set([
+        '001','002','003','004','005','006','007','008','009','010',
+        '011','012','021','022','023','029','030','031','047','048',
+        '049','050','063','064','065','073','075','078','080','081',
+        '082','083','085','091','094','095','096','097','098','099',
+        '100','101','102','103','104','105','106','107','108','109',
+        '110','111','112','113','115','116','117','118','119','120',
+        '121','122','123','124','125','126','127','128','129','130',
+        '131','132','133','134','135','136','137','138','139','140',
+        '141','142','143','188','189','190','192','193','194','195',
+        '197','199','200','201','202','203','205','208','209','210',
+        '211','212'
+      ]);
+
+      function validateSecao(secao, statusId) {
+        const cleaned = secao.replace(/\D/g, '');
+        const el = document.getElementById(statusId);
+        
+        if (cleaned.length === 3) {
+          if (secoesValidas.has(cleaned)) {
+            el.textContent = 'Seção válida';
+            el.style.color = 'green';
+          } else {
+            el.textContent = 'Seção inválida';
+            el.style.color = 'red';
+          }
+        } else {
+          el.textContent = '';
+        }
+      }
+    </script>
     
     <!-- Modal para Visualização -->
     <div id="viewModal" class="modal" onclick="fecharViewModal(event)">  
-  <div class="modal-content" onclick="event.stopPropagation()">  
-    <h2 class="modal-title">Detalhes da Ficha</h2>  
-    <div id="viewContent">Carregando...</div>  
-    <button type="button" class="close-btn" onclick="fecharViewModal()">Fechar</button>  
-  </div>  
-</div>
+      <div class="modal-content" onclick="event.stopPropagation()">  
+        <h2 class="modal-title">Detalhes da Ficha</h2>  
+        <div id="viewContent">Carregando...</div>  
+        <button type="button" class="close-btn" onclick="fecharViewModal()">Fechar</button>  
+      </div>  
+    </div>
 
     <script>
       const firebaseConfig = {
@@ -481,16 +487,14 @@ function validateSecao(secao, statusId) {
             <td>${f.localidade || '-'}</td>
             <td>
               <button class="visualizar" onclick="abrirModalVisualizar('${f.id}')" aria-label="Visualizar">
-  <i class="fas fa-eye"></i>
-</button>
-
-<button class="editar" onclick="abrirModalEditar('${f.id}')" aria-label="Editar">
-  <i class="fas fa-pen"></i>
-</button>
-
-<button class="excluir" onclick="excluirFicha('${f.id}')" aria-label="Excluir">
-  <i class="fas fa-trash"></i>
-</button>
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="editar" onclick="abrirModalEditar('${f.id}')" aria-label="Editar">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="excluir" onclick="excluirFicha('${f.id}')" aria-label="Excluir">
+                <i class="fas fa-trash"></i>
+              </button>
             </td>
           `;
           tbody.appendChild(tr);
@@ -547,7 +551,12 @@ function validateSecao(secao, statusId) {
 
       function toggleDuplicados() {
         const container = document.getElementById('duplicadosContainer');
-        container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        if (container.style.display === 'none' || !container.style.display) {
+          verificarDuplicados();
+          container.style.display = 'block';
+        } else {
+          container.style.display = 'none';
+        }
         salvarEstadoAcao();
       }
 
@@ -602,7 +611,7 @@ function validateSecao(secao, statusId) {
 
       function buscarFicha() {
         filtrarTabela();
-        document.getElementById('buscaInput').blur();
+        // Removido o .blur() para manter o teclado visível
       }
 
       function limparBusca() {
@@ -613,57 +622,8 @@ function validateSecao(secao, statusId) {
         document.querySelectorAll('#fichasTabela tbody tr').forEach(row => {
           row.style.display = 'none';
         });
-        document.getElementById('buscaInput').blur();
+        document.getElementById('buscaInput').focus(); // Mantém o foco após limpar
         salvarEstadoAcao();
-      }
-
-      async function importarBackup(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        try {
-          document.getElementById('loadingSpinner').style.display = 'block';
-          const reader = new FileReader();
-          reader.onload = async function (e) {
-            try {
-              const data = JSON.parse(e.target.result);
-              if (!Array.isArray(data)) throw new Error("Formato de arquivo inválido.");
-
-              for (const ficha of data) {
-                await db.collection('fichas_acaoexecutada').add(ficha);
-              }
-
-              localStorage.removeItem(LOCAL_STORAGE_KEY);
-              await carregarMaisFichas();
-              alert("Backup importado com sucesso!");
-            } catch (error) {
-              alert("Erro ao importar: " + error.message);
-            } finally {
-              document.getElementById('loadingSpinner').style.display = 'none';
-              document.getElementById('inputBackup').value = '';
-            }
-          };
-          reader.readAsText(file);
-        } catch (error) {
-          alert("Erro: " + error.message);
-        }
-      }
-
-      function exportarBackup() {
-        try {
-          const data = JSON.stringify(fichasCache, null, 2);
-          const blob = new Blob([data], { type: 'application/json' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `backup_fichas_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.json`;
-          a.click();
-          URL.revokeObjectURL(url);
-          alert("Backup exportado com sucesso!");
-        } catch (error) {
-          console.error("Erro ao exportar backup:", error);
-          alert("Erro ao exportar backup: " + error.message);
-        }
       }
 
       function abrirModalEditar(id) {
@@ -765,58 +725,53 @@ function validateSecao(secao, statusId) {
       }
       
       function gerarCronogramaPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation: "portrait" });
-      const dataAtual = new Date().toLocaleDateString('pt-BR');
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait" });
+        const dataAtual = new Date().toLocaleDateString('pt-BR');
 
-      const comunidadesMap = fichasCache.reduce((acc, ficha) => {
-        const comunidade = ficha.localidade || 'Sem Comunidade';
-        acc[comunidade] = (acc[comunidade] || 0) + 1;
-        return acc;
-      }, {});
+        const comunidadesMap = fichasCache.reduce((acc, ficha) => {
+          const comunidade = ficha.localidade || 'Sem Comunidade';
+          acc[comunidade] = (acc[comunidade] || 0) + 1;
+          return acc;
+        }, {});
 
-      const comunidadesOrdenadas = Object.entries(comunidadesMap)
-        .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([comunidade, total], index) => [index + 1, comunidade, total]);
+        const comunidadesOrdenadas = Object.entries(comunidadesMap)
+          .sort((a, b) => a[0].localeCompare(b[0]))
+          .map(([comunidade, total], index) => [index + 1, comunidade, total]);
 
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 10;
-      const titulo = `Cronograma de Famílias por Comunidade - ${dataAtual}`;
-      doc.setFontSize(14);
-      doc.text(titulo, pageWidth / 2, 20, { align: "center" });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const margin = 10;
+        const titulo = `Cronograma de Famílias por Comunidade - ${dataAtual}`;
+        doc.setFontSize(14);
+        doc.text(titulo, pageWidth / 2, 20, { align: "center" });
 
-      doc.autoTable({
-        startY: 30,
-        head: [['#', 'Comunidade', 'Total de Famílias']],
-        body: comunidadesOrdenadas,
-        margin: { top: 30, left: margin, right: margin },
-        styles: {
-          fontSize: 10,
-          cellPadding: 3,
-          overflow: 'linebreak',
-          halign: 'center',
-          valign: 'middle'
-        },
-        columnStyles: {
-          0: { cellWidth: 20 },
-          1: { cellWidth: 100 },
-          2: { cellWidth: 60 }
-        },
-        didDrawPage: function (data) {
-          doc.setFontSize(8);
-          const pageStr = `Página ${data.pageNumber}`;
-          doc.text(pageStr, data.settings.margin.left, doc.internal.pageSize.getHeight() - 5);
-          doc.text(`Emitido em: ${dataAtual}`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 5);
-        }
-      });
+        doc.autoTable({
+          startY: 30,
+          head: [['#', 'Comunidade', 'Total de Famílias']],
+          body: comunidadesOrdenadas,
+          margin: { top: 30, left: margin, right: margin },
+          styles: {
+            fontSize: 10,
+            cellPadding: 3,
+            overflow: 'linebreak',
+            halign: 'center',
+            valign: 'middle'
+          },
+          columnStyles: {
+            0: { cellWidth: 20 },
+            1: { cellWidth: 100 },
+            2: { cellWidth: 60 }
+          },
+          didDrawPage: function (data) {
+            doc.setFontSize(8);
+            const pageStr = `Página ${data.pageNumber}`;
+            doc.text(pageStr, data.settings.margin.left, doc.internal.pageSize.getHeight() - 5);
+            doc.text(`Emitido em: ${dataAtual}`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 5);
+          }
+        });
 
-      doc.save(`cronograma_familias_${dataAtual.replace(/\//g, '-')}.pdf`);
-    }
-
-    window.onload = function () {
-      carregarDados();
-    };
-
+        doc.save(`cronograma_familias_${dataAtual.replace(/\//g, '-')}.pdf`);
+      }
 
       function popularComunidades() {
         const select = document.getElementById('comunidadeSelect');
@@ -832,14 +787,13 @@ function validateSecao(secao, statusId) {
 
       window.onload = function () {
         carregarMaisFichas();
-        document.getElementById('inputBackup').addEventListener('change', importarBackup);
         document.getElementById('editForm').addEventListener('submit', salvarEdicao);
         atualizarEstadoBotao();
       };
     </script>
   </main>
   <script src="base64.js"></script>
-<script src="recibo.js"></script>
-<script src="gerarPDF.js"></script>
+  <script src="recibo.js"></script>
+  <script src="gerarPDF.js"></script>
 </body>
 </html>
