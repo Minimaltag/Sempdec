@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <link rel="manifest" href="manifest.json">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SEMPDEC</title>
@@ -98,7 +99,7 @@
   <!-- Conteúdo principal -->
   <main class="flex-grow flex flex-col justify-start items-center w-full overflow-y-auto">
     <section class="flex flex-col items-center gap-4 w-full max-w-md px-4 mt-10">
-      <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/cadastro/fichacafa.html'">CADASTROS</button>
+      <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/cadastro/fichacafa.html'">CAFASTRO DE FAMILIAS</button>
       <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/relatorio/acaoreac.html'">REGISTRO DE AÇÕES</button>
       <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/mural/escalas.html'">ESCALAS</button>   
       <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='https://pmcareiro.infortread.com.br/contracheque/login'">CONTRACHEQUE</button>
@@ -110,6 +111,12 @@
   <footer class="bg-blue-900 text-white text-center py-3 w-full fixed bottom-0 left-0 z-50 shadow-inner italico">
     © 2025 Desenvolvido por Darlan Cardoso | V. 3.28.6
   </footer>
-
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("Service Worker registrado"))
+      .catch(err => console.error("SW erro:", err));
+  }
+</script>
 </body>
 </html>
