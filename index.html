@@ -1,288 +1,122 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  <link rel="manifest" href="manifest.json">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mtag</title>    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEMPDEC</title>
   <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      user-select: none; /* Impede seleção de texto */
-    }
-
-    body {
-      background: #ff9340;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #333;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .login-container {
-      background: #ffffff;
-      padding: 40px 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 360px;
-      text-align: center;
+      height: 100%;
+      background-image: url('assets/logo.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 33%;
+      opacity: 0.3;
+      z-index: -1;
     }
 
-    .logo {
-      max-width: 150px;
-      height: auto;
-      margin-bottom: 30px;
-      animation: pulse 2s infinite ease-in-out;
-      border-radius: 50%;
-      box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.2);
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 2px #ff6a00);
-      }
-      50% {
-        transform: scale(1.05);
-        filter: drop-shadow(0 0 8px #007bff);
+    @media (max-width: 640px) {
+      body::before {
+        background-size: 80%;
       }
     }
 
-    h2 {
-      color: #ff6a00;
-      margin-bottom: 25px;
-      font-weight: 600;
-      font-size: 1.8rem;
+    button, a { outline: none; }
+
+    .header-bg {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
     }
 
-    label {
-      display: block;
-      text-align: left;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #007bff;
-      font-size: 0.9rem;
-    }
-
-    .input-container {
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    input {
+    .action-button {
+      transition: all 0.2s ease;
       width: 100%;
-      padding: 12px 40px 12px 14px;
-      border: 2px solid #007bff;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      max-width: 300px;
+      margin: 0.5rem auto;
+      border-width: 2px;
+      border-color: #ea580c;
     }
 
-    input:focus {
-      border-color: #ff6a00;
-      box-shadow: 0 0 8px rgba(255, 106, 0, 0.3);
-      outline: none;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: #007bff;
-      font-size: 1.2rem;
-    }
-
-    button {
-      width: 100%;
-      background: #ff6a00;
-      color: #ffffff;
-      padding: 14px 0;
-      font-size: 1.1rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      margin-bottom: 10px;
-    }
-
-    button:hover:not(:disabled) {
-      background: #e05a00;
+    .action-button:hover {
       transform: translateY(-2px);
+      background: #fb923c !important;
     }
 
-    button:disabled {
-      background: #cccccc;
-      cursor: not-allowed;
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
 
-    .mensagem {
-      margin-bottom: 20px;
-      padding: 12px;
-      border-radius: 6px;
-      text-align: center;
-      font-size: 0.9rem;
-      font-weight: 500;
-      background-color: #ffe0e0;
-      color: #a00;
-      border: 1px solid #e00;
-      display: none;
-      transition: opacity 0.3s ease;
+    input[type="number"] {
+      -moz-appearance: textfield;
     }
 
-    .mensagem.show {
-      display: block;
-      opacity: 1;
+    .modal-bg {
+      background-color: rgba(0, 0, 0, 0.6);
     }
 
-    .spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 3px solid #ffffff;
-      border-top: 3px solid #888;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      vertical-align: middle;
-      margin-left: 8px;
+    .titulo-com-contorno {
+      color: #f97316;
+      text-shadow: 2px 2px 0 #fff;
     }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .register-link {
-      font-size: 0.9rem;
-      color: #007bff;
-      margin-top: 12px;
-      display: block;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    @media (max-width: 400px) {
-      .login-container {
-        padding: 30px 20px;
-        max-width: 90%;
-      }
-
-      .logo {
-        max-width: 120px;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      button {
-        font-size: 1rem;
-        padding: 12px 0;
-      }
+    .italico {
+      font-style: italic;
     }
   </style>
+</head>
+<body class="min-h-screen bg-gray-50 pt-20 pb-16 flex flex-col items-center overflow-y-auto">
 
+  <!-- Firebase Auth -->  
   <script type="module">
     import { auth } from './js/firebase-config.js';
-    import {
-      signInWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    function mostrarMensagem(texto) {
-      const msg = document.getElementById("mensagem");
-      msg.innerText = texto;
-      msg.classList.add("show");
-    }
-
-    window.togglePassword = function () {
-      const passwordInput = document.getElementById('senha');
-      const toggleIcon = document.getElementById('toggle-password');
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.innerHTML = '🙈';
-      } else {
-        passwordInput.type = 'password';
-        toggleIcon.innerHTML = '👁️';
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
       }
-    };
-
-    window.login = async function () {
-      const email = document.getElementById('email').value;
-      const senha = document.getElementById('senha').value;
-      const botao = document.querySelector("button[type='submit']");
-      const mensagem = document.getElementById("mensagem");
-      mensagem.classList.remove("show");
-
-      if (!email || !senha) {
-        mostrarMensagem("Por favor, preencha todos os campos.");
-        return;
-      }
-
-      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      if (!emailValido) {
-        mostrarMensagem("Digite um email válido.");
-        return;
-      }
-
-      const originalText = botao.innerHTML;
-      botao.disabled = true;
-      botao.innerHTML = `Entrando <span class="spinner"></span>`;
-
-      try {
-        await signInWithEmailAndPassword(auth, email, senha);
-        window.location.href = "home.html";
-      } catch (error) {
-        console.error("Erro ao logar:", error);
-        switch (error.code) {
-          case "auth/invalid-email":
-            mostrarMensagem("Formato de email inválido.");
-            break;
-          case "auth/user-not-found":
-            mostrarMensagem("Usuário não encontrado.");
-            break;
-          case "auth/wrong-password":
-            mostrarMensagem("Senha incorreta.");
-            break;
-          default:
-            mostrarMensagem("Erro ao fazer login. Tente novamente.");
-        }
-      } finally {
-        botao.disabled = false;
-        botao.innerHTML = originalText;
-      }
-    };
-
-    window.irParaCadastro = function () {
-      window.location.href = "cadastro.html";
-    };
+    });
   </script>
-</head>
-<body>
-  <div class="login-container">
-    <img src="assets/favicon.ico" alt="Logo Mtag" class="logo" width="150" />
-    <h2>Login</h2>
-    <div id="mensagem" class="mensagem"></div>
-    <form onsubmit="login(); return false;">
-      <label for="email">Email:</label>
-      <div class="input-container">
-        <input type="email" id="email" name="email" placeholder="Digite seu email" aria-label="Email" required />
-      </div>
-      <label for="senha">Senha:</label>
-      <div class="input-container">
-        <input type="password" id="senha" name="senha" placeholder="Digite sua senha" aria-label="Senha" required />
-        <span id="toggle-password" class="toggle-password" onclick="togglePassword()">👁️</span>
-      </div>
-      <button type="submit">Entrar</button>
-    </form>
-    <span class="register-link" onclick="irParaCadastro()">Cadastrar-se</span>
-  </div>
+
+  <!-- Header fixo -->
+  <header class="header-bg text-white py-2 w-full fixed top-0 left-0 z-50 shadow">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-3xl font-bold titulo-com-contorno">SEMPDEC</h1>
+      <p class="text-base mt-1 italico">Defesa Civil, Somos Todos nós</p>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="flex-grow flex flex-col justify-center items-center w-full overflow-y-auto">
+  <section class="flex flex-col items-center gap-4 w-full max-w-md px-4">
+    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/cadastro/fichacafa.html'">CAFASTRO DE FAMILIAS</button>
+    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/relatorio/acaoreac.html'">REGISTRO DE AÇÕES</button>
+    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/mural/escalas.html'">ESCALAS</button>   
+    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='https://pmcareiro.infortread.com.br/contracheque/login'">CONTRACHEQUE</button>
+    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='https://diariomunicipalaam.org.br/visualizar-publicacao/241210145814496471/EHWSWVZUH'">FERIADOS MUNICIPAL</button>
+  </section>
+</main>
+
+  <!-- Rodapé fixo -->
+  <footer class="bg-blue-900 text-white text-center py-3 w-full fixed bottom-0 left-0 z-50 shadow-inner italico">
+    © 2025 Desenvolvido por Darlan Cardoso | V. 3.28.6
+  </footer>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+      .then(() => console.log("Service Worker registrado"))
+      .catch(err => console.error("SW erro:", err));
+  }
+</script>
 </body>
 </html>

@@ -273,7 +273,7 @@
 
       try {
         await createUserWithEmailAndPassword(auth, email, senha);
-        window.location.href = "home.html";
+        window.location.href = "index.html";
       } catch (error) {
         console.error("Erro ao cadastrar:", error);
         switch (error.code) {
