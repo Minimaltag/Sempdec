@@ -1,365 +1,349 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema de Cadastro - Indisponibilidade Permanente</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cadastro - Mtag</title>
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      user-select: none; /* Impede seleção de texto */
     }
-
     body {
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #007bff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      color: #e2e8f0;
-      overflow: hidden;
-      cursor: default;
+      padding: 20px;
     }
-
-    .container {
+    .login-container {
+      background: #ffffff;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      width: 100%;
+      max-width: 400px;
       text-align: center;
-      max-width: 720px;
-      padding: 48px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 70%);
-      border-radius: 16px;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      z-index: 10;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
-    .container:hover {
-      transform: scale(1.03);
-      box-shadow: 0 16px 56px rgba(0, 0, 0, 0.5);
-    }
-
-    h1 {
-      font-size: 2.8em;
-      font-weight: 800;
-      color: #f97316;
-      margin-bottom: 24px;
-      letter-spacing: -0.02em;
-      text-shadow: 0 3px 10px rgba(249, 115, 22, 0.5);
-    }
-
-    p {
-      font-size: 1.2em;
-      line-height: 1.8;
-      color: #d1d5db;
-      margin-bottom: 16px;
-    }
-
-    .signature {
-      font-size: 1.1em;
-      color: #94a3b8;
-      margin-top: 24px;
-      font-style: italic;
-    }
-
-    .status-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 24px;
-      padding: 12px 24px;
-      background: rgba(249, 115, 22, 0.15);
-      border-radius: 10px;
-      border: 1px solid rgba(249, 115, 22, 0.4);
-      color: #f97316;
-      font-weight: 600;
-      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .status-indicator:hover {
-      background: rgba(249, 115, 22, 0.25);
-      transform: translateY(-3px);
-      box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
-    }
-
-    .status-dot {
-      width: 14px;
-      height: 14px;
-      background: #f97316;
+    .logo {
+      max-width: 150px;
+      height: auto;
+      margin: 0 auto 30px;
+      animation: pulse 2s infinite ease-in-out;
       border-radius: 50%;
-      box-shadow: 0 0 16px rgba(249, 115, 22, 0.9);
-      animation: pulse 1.6s infinite ease-in-out;
+      box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.2);
     }
-
     @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 0.7; }
-      50% { transform: scale(1.5); opacity: 1; }
+      0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 2px #007bff);
+      }
+      50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 8px #0056b3);
+      }
     }
-
-    canvas {
+    h2 {
+      color: #007bff;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 1.8rem;
+    }
+    .form-group {
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #007bff;
+      font-size: 0.95rem;
+    }
+    .input-container {
+      position: relative;
+    }
+    input {
+      width: 100%;
+      padding: 14px 40px 14px 16px;
+      border: 2px solid #007bff;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input:focus {
+      border-color: #0056b3;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+      outline: none;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #007bff;
+      font-size: 1.2rem;
+    }
+    button {
+      width: 100%;
+      background: #007bff;
+      color: #ffffff;
+      padding: 14px 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 10px;
+    }
+    button:hover:not(:disabled) {
+      background: #0056b3;
+      transform: translateY(-2px);
+    }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    .mensagem {
+      margin: 15px 0;
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      background-color: #e6f0ff;
+      color: #004085;
+      border: 1px solid #007bff;
+      display: none;
+      transition: opacity 0.3s ease;
+    }
+    .mensagem.show {
+      display: block;
+      opacity: 1;
+    }
+    .redefinir-link {
+      color: #007bff;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: block;
+      margin-top: 15px;
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+    .redefinir-link:hover {
+      color: #0056b3;
+    }
+    .modal {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.6;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
-
-    @media (max-width: 600px) {
-      .container { padding: 24px; }
-      h1 { font-size: 2.2em; }
-      p { font-size: 1.1em; }
+    .modal.show {
+      display: flex;
+    }
+    .modal-content {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+    .modal-content h3 {
+      color: #007bff;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+    .modal-content .form-group {
+      margin-bottom: 20px;
+    }
+    .close-modal {
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 1rem;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    .close-modal:hover {
+      color: #0056b3;
+    }
+    @media (max-width: 400px) {
+      .login-container {
+        padding: 30px 20px;
+        max-width: 90%;
+      }
+      .logo {
+        max-width: 120px;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      button {
+        font-size: 1rem;
+        padding: 12px 0;
+      }
+      label {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
-  <canvas id="maintenanceCanvas"></canvas>
-  <div class="container">
-    <h1>Sistema de Cadastro - Indisponibilidade Permanente</h1>
-    <p>Prezado(a) usuário(a),</p>
-    <p>Informo que, devido ao descumprimento contratual por parte de um parceiro, o <strong>Sistema de Cadastro</strong> foi descontinuado permanentemente.</p>
-    <p>Como único desenvolvedor do sistema, lamento profundamente os transtornos causados por essa decisão. Agradeço pela confiança depositada na plataforma durante seu período de operação. Para quaisquer dúvidas ou esclarecimentos, peço que entre em contato diretamente comigo, presencialmente.</p>
-    <p>Agradeço sua compreensão.</p>
-    <p class="signature">Atenciosamente,<br>Darlan W.M. Cardoso<br>Desenvolvedor</p>
-    <div class="status-indicator">
-      <span class="status-dot"></span>
-      <span>Status: Sistema Descontinuado</span>
+  <div class="login-container">
+    <img src="assets/favicon.ico" alt="Logo Mtag" class="logo" />
+    <h2>Cadastro</h2>
+    <div id="mensagem" class="mensagem"></div>
+    <form onsubmit="cadastrar(); return false;">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Digite seu email" required />
+      </div>
+      <div class="form-group">
+        <label for="senha">Senha:</label>
+        <div class="input-container">
+          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required />
+          <span id="toggle-password" class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <span class="redefinir-link" onclick="abrirModal()">Esqueceu a senha?</span>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h3>Redefinir Senha</h3>
+      <div class="form-group">
+        <input type="email" id="email-redefinicao" placeholder="Seu email" />
+      </div>
+      <button onclick="redefinirSenha()">Enviar Email</button>
+      <div id="mensagem-redefinicao" class="mensagem"></div>
+      <button class="close-modal" onclick="fecharModal()">Fechar</button>
     </div>
   </div>
 
-  <script>
-    const canvas = document.getElementById('maintenanceCanvas');
-    const ctx = canvas.getContext('2d');
+  <script type="module">
+    import { auth } from './js/firebase-config.js';
+    import { createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // Ajusta o tamanho do canvas
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    // Mouse position for interactivity
-    let mouse = { x: null, y: null };
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-    window.addEventListener('touchmove', (e) => {
-      mouse.x = e.touches[0].clientX;
-      mouse.y = e.touches[0].clientY;
-    });
-
-    // Click event for icon pulse
-    let clicked = false;
-    window.addEventListener('click', () => {
-      clicked = true;
-      setTimeout(() => { clicked = false; }, 500);
-    });
-
-    // Partículas interativas com trilha e conexões
-    const particles = [];
-    for (let i = 0; i < 150; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 2 + 1.5,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        color: Math.random() > 0.5 ? '#f97316' : '#3b82f6',
-        trail: []
-      });
+    function mostrarMensagem(texto) {
+      const msg = document.getElementById("mensagem");
+      msg.innerText = texto;
+      msg.classList.add("show");
     }
 
-    // Ícones de manutenção
-    const icons = [
-      { type: 'wrench', x: canvas.width * 0.25, y: canvas.height * 0.3, size: 50, angle: 0, speed: 0.02, scale: 1, scaleSpeed: 0.006, depth: 0.5, wobble: 0 },
-      { type: 'screwdriver', x: canvas.width * 0.75, y: canvas.height * 0.35, size: 60, angle: 0, speed: -0.015, scale: 1, scaleSpeed: -0.005, depth: 0.7, wobble: 0 },
-      { type: 'cog', x: canvas.width * 0.5, y: canvas.height * 0.7, size: 55, angle: 0, speed: 0.018, scale: 1, scaleSpeed: 0.007, depth: 0.9, wobble: 0 }
-    ];
+    window.cadastrar = async function () {
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+      const botao = document.querySelector("button[type='submit']");
+      const mensagem = document.getElementById("mensagem");
+      mensagem.classList.remove("show");
 
-    function drawParticles() {
-      particles.forEach((p, i) => {
-        // Atualiza trilha
-        p.trail.push({ x: p.x, y: p.y, alpha: 1 });
-        if (p.trail.length > 12) p.trail.shift();
-
-        // Interatividade com o mouse
-        if (mouse.x !== null && mouse.y !== null) {
-          const dx = mouse.x - p.x;
-          const dy = mouse.y - p.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 120) {
-            const force = (120 - distance) / 120;
-            p.speedX += (dx / distance) * force * 0.12;
-            p.speedY += (dy / distance) * force * 0.12;
-          }
-        }
-
-        // Desenha conexões entre partículas próximas
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 80) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(${p.color === '#f97316' ? '249,115,22' : '59,130,246'}, ${1 - distance / 80})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-
-        // Desenha trilha
-        p.trail.forEach((t, i) => {
-          ctx.beginPath();
-          ctx.arc(t.x, t.y, p.radius * (1 - i / p.trail.length), 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${p.color === '#f97316' ? '249,115,22' : '59,130,246'}, ${t.alpha * (i / p.trail.length)})`;
-          ctx.fill();
-        });
-
-        // Desenha partícula
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
-        ctx.shadowColor = p.color;
-        ctx.shadowBlur = 20;
-        ctx.fill();
-
-        // Atualiza posição
-        p.x += p.speedX;
-        p.y += p.speedY;
-        if (p.x < 0 || p.x > canvas.width) p.speedX *= -0.85;
-        if (p.y < 0 || p.y > canvas.height) p.speedY *= -0.85;
-      });
-      ctx.shadowBlur = 0;
-    }
-
-    function drawWrench(x, y, size, angle, scale, depth, wobble) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle + Math.sin(wobble) * 0.1);
-      ctx.scale(scale, scale);
-      ctx.fillStyle = '#f97316';
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * depth})`;
-      ctx.lineWidth = 2;
-      ctx.shadowColor = '#f97316';
-      ctx.shadowBlur = 15 * depth;
-      ctx.beginPath();
-      ctx.moveTo(-size * 0.4, -size * 0.1);
-      ctx.lineTo(-size * 0.2, -size * 0.1);
-      ctx.arc(-size * 0.2, 0, size * 0.1, -Math.PI / 2, Math.PI / 2);
-      ctx.lineTo(-size * 0.2, size * 0.1);
-      ctx.lineTo(size * 0.4, size * 0.3);
-      ctx.lineTo(size * 0.4, -size * 0.3);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function drawScrewdriver(x, y, size, angle, scale, depth, wobble) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle + Math.sin(wobble) * 0.1);
-      ctx.scale(scale, scale);
-      ctx.fillStyle = '#3b82f6';
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * depth})`;
-      ctx.lineWidth = 2;
-      ctx.shadowColor = '#3b82f6';
-      ctx.shadowBlur = 15 * depth;
-      ctx.beginPath();
-      ctx.moveTo(0, -size * 0.5);
-      ctx.lineTo(size * 0.1, -size * 0.3);
-      ctx.lineTo(size * 0.05, size * 0.5);
-      ctx.lineTo(-size * 0.05, size * 0.5);
-      ctx.lineTo(-size * 0.1, -size * 0.3);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
-
-    function drawCog(x, y, size, angle, scale, depth, wobble) {
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle + Math.sin(wobble) * 0.1);
-      ctx.scale(scale, scale);
-      ctx.fillStyle = '#f97316';
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * depth})`;
-      ctx.lineWidth = 2;
-      ctx.shadowColor = '#f97316';
-      ctx.shadowBlur = 15 * depth;
-      const teeth = 12;
-      for (let i = 0; i < teeth; i++) {
-        ctx.beginPath();
-        ctx.rotate((2 * Math.PI) / teeth);
-        ctx.moveTo(size * 0.6, 0);
-        ctx.lineTo(size * 0.8, 0);
-        ctx.stroke();
+      if (!email || !senha) {
+        mostrarMensagem("Por favor, preencha todos os campos.");
+        return;
       }
-      ctx.beginPath();
-      ctx.arc(0, 0, size * 0.6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.restore();
-    }
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!emailValido) {
+        mostrarMensagem("Digite um email válido.");
+        return;
+      }
 
-      drawParticles();
-      icons.forEach(icon => {
-        // Interatividade com o mouse
-        let dx = 0, dy = 0;
-        if (mouse.x !== null && mouse.y !== null) {
-          dx = mouse.x - icon.x;
-          dy = mouse.y - icon.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 150) {
-            const force = (150 - distance) / 150;
-            icon.x += (dx / distance) * force * 2.5;
-            icon.y += (dy / distance) * force * 2.5;
-            icon.wobble += force * 0.1;
-          }
+      botao.disabled = true;
+      botao.innerText = "Cadastrando...";
+
+      try {
+        await createUserWithEmailAndPassword(auth, email, senha);
+        window.location.href = "index.html";
+      } catch (error) {
+        console.error("Erro ao cadastrar:", error);
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            mostrarMensagem("Este email já está em uso.");
+            break;
+          case "auth/weak-password":
+            mostrarMensagem("A senha deve ter pelo menos 6 caracteres.");
+            break;
+          default:
+            mostrarMensagem("Erro ao cadastrar. Tente novamente.");
         }
+      } finally {
+        botao.disabled = false;
+        botao.innerText = "Cadastrar";
+      }
+    };
 
-        // Efeito de clique
-        if (clicked) {
-          icon.scale += 0.2;
-          setTimeout(() => { icon.scale -= 0.2; }, 200);
+    window.abrirModal = function () {
+      const emailCadastro = document.getElementById("email").value;
+      document.getElementById("email-redefinicao").value = emailCadastro;
+      document.getElementById("modal").classList.add("show");
+    };
+
+    window.fecharModal = function () {
+      document.getElementById("modal").classList.remove("show");
+    };
+
+    window.redefinirSenha = async function () {
+      const email = document.getElementById("email-redefinicao").value;
+      const mensagem = document.getElementById("mensagem-redefinicao");
+      mensagem.classList.remove("show");
+
+      if (!email) {
+        mensagem.innerText = "Digite um email.";
+        mensagem.classList.add("show");
+        return;
+      }
+
+      try {
+        await sendPasswordResetEmail(auth, email);
+        mensagem.innerText = "Email de redefinição enviado.";
+        mensagem.classList.add("show");
+      } catch (error) {
+        console.error("Erro ao enviar email:", error);
+        switch (error.code) {
+          case "auth/user-not-found":
+            mensagem.innerText = "Email não cadastrado.";
+            break;
+          case "auth/invalid-email":
+            mensagem.innerText = "Email inválido.";
+            break;
+          default:
+            mensagem.innerText = "Erro ao enviar email. Tente novamente.";
         }
+        mensagem.classList.add("show");
+      }
+    };
 
-        // Limita movimento para não sair do canvas
-        icon.x = Math.max(icon.size, Math.min(canvas.width - icon.size, icon.x));
-        icon.y = Math.max(icon.size, Math.min(canvas.height - icon.size, icon.y));
-
-        if (icon.type === 'wrench') drawWrench(icon.x, icon.y, icon.size, icon.angle, icon.scale, icon.depth, icon.wobble);
-        else if (icon.type === 'screwdriver') drawScrewdriver(icon.x, icon.y, icon.size, icon.angle, icon.scale, icon.depth, icon.wobble);
-        else if (icon.type === 'cog') drawCog(icon.x, icon.y, icon.size, icon.angle, icon.scale, icon.depth, icon.wobble);
-
-        icon.angle += icon.speed;
-        icon.scale += icon.scaleSpeed;
-        if (icon.scale > 1.4 || icon.scale < 0.6) icon.scaleSpeed *= -1;
-        icon.wobble *= 0.9; // Amortecimento do wobble
-      });
-
-      requestAnimationFrame(animate);
-    }
-
-    // Ajusta o canvas em caso de redimensionamento
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      icons.forEach(icon => {
-        icon.x = canvas.width * (icon.x / canvas.width);
-        icon.y = canvas.height * (icon.y / canvas.height);
-      });
-    });
-
-    animate();
+    window.togglePassword = function () {
+      const senhaInput = document.getElementById("senha");
+      const toggleIcon = document.getElementById("toggle-password");
+      if (senhaInput.type === "password") {
+        senhaInput.type = "text";
+        toggleIcon.textContent = "🙈";
+      } else {
+        senhaInput.type = "password";
+        toggleIcon.textContent = "👁️";
+      }
+    };
   </script>
 </body>
 </html>
