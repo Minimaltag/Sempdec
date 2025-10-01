@@ -1,122 +1,108 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <link rel="manifest" href="manifest.json">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SEMPDEC</title>
-  <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#ffffff">
+  <title>Nohaby</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('assets/logo.png');
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: 33%;
-      opacity: 0.3;
-      z-index: -1;
-    }
-
-    @media (max-width: 640px) {
-      body::before {
-        background-size: 80%;
-      }
-    }
-
-    button, a { outline: none; }
-
-    .header-bg {
-      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-    }
-
-    .action-button {
-      transition: all 0.2s ease;
-      width: 100%;
-      max-width: 300px;
-      margin: 0.5rem auto;
-      border-width: 2px;
-      border-color: #ea580c;
-    }
-
-    .action-button:hover {
-      transform: translateY(-2px);
-      background: #fb923c !important;
-    }
-
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-      -webkit-appearance: none;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
-    input[type="number"] {
-      -moz-appearance: textfield;
+    body {
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
     }
 
-    .modal-bg {
-      background-color: rgba(0, 0, 0, 0.6);
+    .wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
     }
 
-    .titulo-com-contorno {
-      color: #f97316;
-      text-shadow: 2px 2px 0 #fff;
+    .card {
+      background-color: #ffffff;
+      border: 2px solid #cccccc;
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 100%;
     }
 
-    .italico {
-      font-style: italic;
+    h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: normal;
+    }
+
+    p {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      background-color: transparent;
+      border: 2px solid #333;
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 5px 0;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background-color: #333;
+      color: #fff;
     }
   </style>
 </head>
-<body class="min-h-screen bg-gray-50 pt-20 pb-16 flex flex-col items-center overflow-y-auto">
+<link rel="manifest" href="manifest.json">
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>BEM-VINDO AO NOHABY</h1>
+      <p>Área de desenvolvimento pessoal</p>
 
-  <!-- Firebase Auth -->  
-  <script type="module">
-    import { auth } from './js/firebase-config.js';
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-      }
-    });
-  </script>
-
-  <!-- Header fixo -->
-  <header class="header-bg text-white py-2 w-full fixed top-0 left-0 z-50 shadow">
-    <div class="container mx-auto px-4 text-center">
-      <h1 class="text-3xl font-bold titulo-com-contorno">SEMPDEC</h1>
-      <p class="text-base mt-1 italico">Defesa Civil, Somos Todos nós</p>
+      <button class="btn" id="gastosBtn">Mau hábito</button>
+      <button class="btn" id="senhasBtn">Tarefas</button>
     </div>
-  </header>
+  </div>
 
-  <!-- Conteúdo principal -->
-  <main class="flex-grow flex flex-col justify-center items-center w-full overflow-y-auto">
-  <section class="flex flex-col items-center gap-4 w-full max-w-md px-4">
-    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/cadastro/fichacafa.html'">CAFASTRO DE FAMILIAS</button>
-    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/relatorio/acaoreac.html'">REGISTRO DE AÇÕES</button>
-    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='funcao/mural/escalas.html'">ESCALAS</button>   
-    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='https://pmcareiro.infortread.com.br/contracheque/login'">CONTRACHEQUE</button>
-    <button class="action-button bg-orange-500 text-black font-bold py-2 px-4 rounded shadow hover:bg-orange-600" onclick="window.location.href='https://diariomunicipalaam.org.br/visualizar-publicacao/241210145814496471/EHWSWVZUH'">FERIADOS MUNICIPAL</button>
-  </section>
-</main>
+  <script>
+    const gastosBtn = document.querySelector('#gastosBtn');
+    const senhasBtn = document.querySelector('#senhasBtn');
 
-  <!-- Rodapé fixo -->
-  <footer class="bg-blue-900 text-white text-center py-3 w-full fixed bottom-0 left-0 z-50 shadow-inner italico">
-    © 2025 Desenvolvido por Darlan Cardoso | V. 3.28.6
-  </footer>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js")
-      .then(() => console.log("Service Worker registrado"))
-      .catch(err => console.error("SW erro:", err));
-  }
-</script>
+    gastosBtn.addEventListener('click', () => {
+      window.location.href = "mhaby.html";
+    });
+
+    senhasBtn.addEventListener('click', () => {
+      window.location.href = "haby.html";
+    });
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("Service Worker registrado"))
+        .catch(err => console.error("SW erro:", err));
+    }
+  </script>
 </body>
 </html>
